@@ -101,12 +101,12 @@ st.sidebar.caption("Bitcoin price forecast — ML + sentiment Twitter")
 page = st.sidebar.radio(
     "Halaman",
     [
-        "🏠 Overview",
-        "📊 Data & Sentiment",
-        "🧪 Feature Engineering",
-        "🤖 Model Predictions",
-        "📈 Metrics & Comparison",
-        "✅ Kesimpulan",
+        " Overview",
+        " Data & Sentiment",
+        " Feature Engineering",
+        " Model Predictions",
+        " Metrics & Comparison",
+        " Kesimpulan",
     ],
     label_visibility="collapsed",
 )

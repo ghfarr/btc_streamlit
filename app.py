@@ -271,7 +271,7 @@ def page_data_sentiment():
 # Page: Feature Engineering
 # ----------------------------------------------------------------------
 def page_features():
-    st.title("🧪 Feature Engineering")
+    st.title(" Feature Engineering")
     df = load_features()
     fcols = load_feature_cols()
     st.markdown(

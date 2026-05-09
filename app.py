@@ -456,12 +456,12 @@ Kenapa LR yang paling kuat di test set?
 # Router
 # ----------------------------------------------------------------------
 ROUTES = {
-    "🏠 Overview": page_overview,
-    "📊 Data & Sentiment": page_data_sentiment,
-    "🧪 Feature Engineering": page_features,
-    "🤖 Model Predictions": page_predictions,
-    "📈 Metrics & Comparison": page_metrics,
-    "✅ Kesimpulan": page_conclusion,
+    " Overview": page_overview,
+    " Data & Sentiment": page_data_sentiment,
+    " Feature Engineering": page_features,
+    " Model Predictions": page_predictions,
+    " Metrics & Comparison": page_metrics,
+    " Kesimpulan": page_conclusion,
 }
 
 try:

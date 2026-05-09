@@ -132,10 +132,10 @@ st.sidebar.caption("Built with Streamlit · Data: CoinGecko + HuggingFace")
 def page_overview():
     st.title("₿ BTC Price Prediction Dashboard")
     st.markdown(
-        "Memprediksi harga **Bitcoin** menggunakan kombinasi **data historis** (CoinGecko) "
+        "Memprediksi harga **Bitcoin** menggunakan kombinasi **data historis** "
         "+ **sentimen Twitter real** (HuggingFace dataset) + tiga model ML "
         "(**Linear Regression**, **Random Forest**, **LSTM**) untuk dua horizon: "
-        "**t+1 hari** dan **t+30 hari**."
+        "**t+1 hari** dan **t+30 hari**. Made by @Muhammad Ghozi Alghifari"
     )
 
     btc = load_btc()

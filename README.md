@@ -81,27 +81,62 @@ btc_streamlit/
 
 ---
 
-## 🔁 Re-train Pipeline (Opsional)
+## 🔄 Re-train Pipeline (Opsional)
 
 Kalau mau re-train (misal: ganti hyperparameter, tambah data, dll.):
 
-```bash
-# Install deps lengkap (termasuk tensorflow, datasets, vaderSentiment)
-pip install -r requirements-train.txt
+1. Buka Google Colab yang sama dengan notebook training
+2. Pastikan semua variabel seperti `train`, `val`, `test`, `all_preds`, `results_df`, `feature_cols`, `tweets_df` masih ada di memori
+3. Jalankan cell berikut di Colab:
 
-# Pastikan file btc_2021_01_01_to_2025_12_31.csv ada di folder ini
+\```python
+import json, shutil
+from pathlib import Path
 
-# Jalankan precompute (akan download dataset HuggingFace ~50 MB,
-# train LR + RF + LSTM, lalu overwrite semua file di data/)
-python precompute.py
-```
+DATA_DIR = Path('/content/data')
+DATA_DIR.mkdir(exist_ok=True)
 
-Output `data/*.parquet` akan ke-overwrite dengan hasil training baru.
-Habis itu tinggal `git add data/ && git commit && git push` → Streamlit Cloud auto-redeploy.
+btc.to_parquet(DATA_DIR / 'btc.parquet', index=False)
+sentiment.to_parquet(DATA_DIR / 'sentiment.parquet', index=False)
+df.to_parquet(DATA_DIR / 'features.parquet', index=False)
 
-> ⚠️ **Catatan:** `precompute.py` butuh TensorFlow + HuggingFace dataset yang berat.
-> JANGAN pernah dijalanin di Streamlit Cloud (free tier) — bakal timeout / out-of-memory.
-> Selalu run lokal, lalu push hasilnya.
+with open(DATA_DIR / 'feature_cols.json', 'w') as f:
+    json.dump(feature_cols, f)
+
+preds_long_rows = []
+for horizon_label in ["t+1", "t+30"]:
+    d_va = all_preds[horizon_label]["dates_val"]
+    d_te = all_preds[horizon_label]["dates_test"]
+    y_va = all_preds[horizon_label]["y_val"]
+    y_te = all_preds[horizon_label]["y_test"]
+    for model_name in ["LinearRegression", "RandomForest", "LSTM"]:
+        pv = all_preds[horizon_label]["preds_val"][model_name]
+        pt = all_preds[horizon_label]["preds_test"][model_name]
+        for d, t, p in zip(d_va, y_va, pv):
+            preds_long_rows.append({"horizon": horizon_label, "model": model_name,
+                                    "split": "validation", "date": pd.Timestamp(d),
+                                    "y_true": float(t), "y_pred": float(p)})
+        for d, t, p in zip(d_te, y_te, pt):
+            preds_long_rows.append({"horizon": horizon_label, "model": model_name,
+                                    "split": "test", "date": pd.Timestamp(d),
+                                    "y_true": float(t), "y_pred": float(p)})
+
+pd.DataFrame(preds_long_rows).to_parquet(DATA_DIR / 'predictions.parquet', index=False)
+results_df.to_parquet(DATA_DIR / 'metrics.parquet', index=False)
+results_df.to_csv(DATA_DIR / 'metrics.csv', index=False)
+tweets_df[["date","text","compound","pos","neg"]].sample(
+    n=min(5000, len(tweets_df)), random_state=42
+).reset_index(drop=True).to_parquet(DATA_DIR / 'tweets_sample.parquet', index=False)
+
+shutil.make_archive('/content/data_new', 'zip', '/content/data')
+print("DONE! Siap didownload.")
+\```
+
+4. Download file-file dari folder `data` di panel Files Colab
+5. Upload ke folder `data/` di repo GitHub ini
+6. Streamlit Cloud akan otomatis redeploy
+
+> **Catatan:** Jangan jalankan training di Streamlit Cloud karena akan timeout dan out-of-memory. Selalu run di Google Colab lalu upload hasilnya ke GitHub.
 
 ---
 

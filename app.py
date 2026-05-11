@@ -20,9 +20,9 @@ import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 
-# ----------------------------------------------------------------------
+
 # Config
-# ----------------------------------------------------------------------
+
 st.set_page_config(
     page_title="BTC Price Prediction Dashboard",
     page_icon="₿",
@@ -40,9 +40,9 @@ MODEL_COLORS = {
 ACTUAL_COLOR = "#111111"
 
 
-# ----------------------------------------------------------------------
+
 # Data loaders (cached)
-# ----------------------------------------------------------------------
+
 @st.cache_data(show_spinner=False)
 def load_btc() -> pd.DataFrame:
     df = pd.read_parquet(DATA_DIR / "btc.parquet")
@@ -92,9 +92,9 @@ def load_feature_cols() -> list:
         return json.load(f)
 
 
-# ----------------------------------------------------------------------
+
 # Sidebar — global controls
-# ----------------------------------------------------------------------
+
 st.sidebar.title("₿ BTC Predictor")
 st.sidebar.caption("Bitcoin price forecast — ML + sentiment Twitter")
 
@@ -126,9 +126,9 @@ st.sidebar.divider()
 st.sidebar.caption("Built with Streamlit · Data: CoinGecko + HuggingFace")
 
 
-# ----------------------------------------------------------------------
+
 # Page: Overview
-# ----------------------------------------------------------------------
+
 def page_overview():
     st.title("₿ BTC Price Prediction Dashboard")
     st.markdown(
@@ -182,9 +182,9 @@ def page_overview():
     )
 
 
-# ----------------------------------------------------------------------
+
 # Page: Data & Sentiment
-# ----------------------------------------------------------------------
+
 def page_data_sentiment():
     st.title("📊 Data Historis & Sentimen Twitter")
 
@@ -267,9 +267,9 @@ def page_data_sentiment():
         st.dataframe(view.head(500), use_container_width=True, hide_index=True)
 
 
-# ----------------------------------------------------------------------
+
 # Page: Feature Engineering
-# ----------------------------------------------------------------------
+
 def page_features():
     st.title(" Feature Engineering")
     df = load_features()
@@ -296,9 +296,9 @@ def page_features():
         st.dataframe(df.head(100), use_container_width=True, hide_index=True)
 
 
-# ----------------------------------------------------------------------
+
 # Page: Predictions
-# ----------------------------------------------------------------------
+
 def page_predictions():
     st.title("🤖 Model Predictions — Actual vs Predicted")
 
@@ -374,9 +374,9 @@ def page_predictions():
     st.dataframe(summary, use_container_width=True, hide_index=True)
 
 
-# ----------------------------------------------------------------------
+
 # Page: Metrics
-# ----------------------------------------------------------------------
+
 def page_metrics():
     st.title("📈 Metrics & Model Comparison")
     metrics = load_metrics()
@@ -412,9 +412,9 @@ def page_metrics():
     )
 
 
-# ----------------------------------------------------------------------
+
 # Page: Conclusion
-# ----------------------------------------------------------------------
+
 def page_conclusion():
     st.title("✅ Kesimpulan")
     st.markdown("""
@@ -452,9 +452,9 @@ Kenapa LR yang paling kuat di test set?
     st.info("Untuk hasil yang reproducible, semua random seed dikunci di `RANDOM_SEED=42`.")
 
 
-# ----------------------------------------------------------------------
+
 # Router
-# ----------------------------------------------------------------------
+
 ROUTES = {
     " Overview": page_overview,
     " Data & Sentiment": page_data_sentiment,
